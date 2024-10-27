@@ -21,7 +21,7 @@ public:
         std::cout << "\nEnter (x,y) : ";
         std::cin >> temp_x >> temp_y;
         if (temp_x > 0) {
-            if (paint.sizeW_x + paint.placeW_x + temp_x > monitor_X) {
+            if (paint.sizeW_x + paint.placeW_x + temp_x >= monitor_X) {
                 std::cout << "\nCant move winow like that !";
                 return;
             }
@@ -33,7 +33,7 @@ public:
             }
         }
         if (temp_y > 0) {
-            if (paint.sizeW_y + paint.placeW_y + temp_y > monitor_Y) {
+            if (paint.sizeW_y + paint.placeW_y + temp_y >= monitor_Y) {
                 std::cout << "\nCant move winow like that !";
                 return;
             }

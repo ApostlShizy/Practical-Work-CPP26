@@ -28,13 +28,16 @@ class Phone {
         }
         std::string temp = "+7";
         temp += buffer_number;
+        if (search(temp) != -1) {
+            std::cout << "\nThat number alredy addet !";
+            return true;
+        }
         per_number[i].num = temp;
         return false;
     }
 
-    bool add_name() {
-        per_number.resize(per_number.size() + 1);
-        int i = per_number.size() - 1;
+    bool add_name() {       
+        int i = per_number.size();
         std::string buffer_name;
         std::cout << "\nEnter name : ";
         std::cin >> buffer_name;
@@ -44,11 +47,12 @@ class Phone {
                 return true;
             }
         }
+        per_number.resize(per_number.size() + 1);
         per_number[i].name = buffer_name;
         return false;
     }
 
-    bool search(std::string& str) const {
+    int search(std::string& str) const {
         bool its_num = false;
         if (str[0] == '+' && str[1] == '7') {
             its_num = true;
@@ -56,20 +60,18 @@ class Phone {
         if (its_num) {
             for (int i = 0; i < per_number.size(); ++i) {
                 if (per_number[i].num == str) {
-                    std::cout << "\nBy number \"" << str << "\" found : " << per_number[i].name;
-                    return true;
+                    return i;
                 }
             }
         }
         else {
             for (int i = 0; i < per_number.size(); ++i) {
                 if (per_number[i].name == str) {
-                    std::cout << "\nBy name \"" << str << "\" found : " << per_number[i].num;
-                    return true;
+                    return i;
                 }
             }
         }
-        return false;
+        return -1;
     }
 
 public:
@@ -81,28 +83,61 @@ public:
 
     void call() {
         std::string str;
-        std::cout << "\nEnter a name or number to search : ";
+        std::cout << "\nEnter a name or number like (+71234567890) to search : ";
         std::cin >> str;
-        if (!search(str)) {
-            std::cout << "\nNot find enything";
+        int i = search(str);
+        if (i == -1) {
+            std::cout << "\nNot find enything"<<std::endl;
         }
         else {
-            std::cout << "\nCalling ......";
+            if (str[0] == '+') {
+                std::cout << "\nBy number \"" << str << "\" found : " << per_number[i].name;
+            }
+            else {
+                std::cout << "\nBy name \"" << str << "\" found : " << per_number[i].num;
+            }
+            std::cout << "\nCalling ......" << std::endl;;
         }
     }
 
     void sms() {
         std::string str;
         std::cout << "\nEnter a name or number like (+71234567890) to search : ";
-        std::cin >> str;
-        if (!search(str)) {
-            std::cout << "\nNot find enything";
+        int i = search(str);
+        if (i == -1) {
+            std::cout << "\nNot find enything" << std::endl;
         }
         else {
+            if (str[0] == '+') {
+                std::cout << "\nBy number \"" << str << "\" found : " << per_number[i].name;
+            }
+            else {
+                std::cout << "\nBy name \"" << str << "\" found : " << per_number[i].num;
+            }
             std::string temp;
             std::cout << "\nWriete sms : ";
             std::cin >> temp;
-            std::cout << "\nSMS \"" << temp << "\" was sent successfully";
+            std::cout << "\nSMS \"" << temp << "\" was sent successfully"<<std::endl;
+        }
+    }
+
+    void deleteNumber() {
+        std::string temp;
+        std::cout << "\nEnter what number you want delete : ";
+        std::cin >> temp;
+        int i = search(temp);
+        if (i != -1) {
+            std::cout << "\nFount number : " << per_number[i].num << " name : " << per_number[i].name << std::endl;
+            std::cout << "You want delete this number (yes/no) : ";
+            std::cin >> temp;
+            if (temp == "yes") {
+                std::vector<PhoneBook>::iterator iter = per_number.begin()+i;
+                per_number.erase(iter);
+                std::cout << "\nNumber has successfully deleted " << std::endl;
+            }
+        }
+        else {
+            std::cout << "\nNot find enything" << std::endl;
         }
     }
 };
@@ -111,7 +146,7 @@ int main() {
     Phone pers_numbers;
     std::string choice;
     while (choice != "exit") {
-        std::cout << "\nMake choice\nadd\ncall\nsms\nexit\nEnter : ";
+        std::cout << "\nMake choice\nadd\ncall\nsms\nexit\ndelete\nEnter : ";
         std::cin >> choice;
         if (choice == "add") {
             pers_numbers.add();
@@ -121,6 +156,9 @@ int main() {
         }
         else if (choice == "sms") {
             pers_numbers.sms();
+        }
+        else if (choice == "delete") {
+            pers_numbers.deleteNumber();
         }
         else if (choice != "exit") {
             std::cout << "\nInvalid option!";
